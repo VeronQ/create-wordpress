@@ -1,0 +1,10 @@
+{
+  "extends": "oclif",
+  "rules": {
+    "no-console": 0,
+    "no-process-exit": "off",
+    "node/no-extraneous-require": ["error", {
+      "allowModules": ["cli-ux"]
+    }]
+  }
+}

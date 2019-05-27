@@ -1,0 +1,102 @@
+const inquirer = require('inquirer')
+inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
+const fuzzy = require('fuzzy')
+const {locales, themes, plugins} = require('../api')
+const {
+  DEFAULT_DB_USER,
+  DEFAULT_DB_HOST,
+  DEFAULT_DB_PREFIX,
+  DEFAULT_SITE_EXTENSION,
+  DEFAULT_SITE_PROTOCOL,
+} = require('./types')
+
+const search = (answers, input = '', api) => {
+  return new Promise(function (resolve) {
+    const result = fuzzy.filter(input, api)
+    resolve(
+      result.map(el => el.original),
+    )
+  })
+}
+
+const validateInput = (input, name) => {
+  const isValid = input !== ''
+  return isValid || `${name} is required`
+}
+
+module.exports = (projectName, flags) => {
+  return inquirer.prompt([
+    {
+      type: 'input',
+      name: 'dbName',
+      message: 'Database name',
+      default: () => projectName,
+      validate: input => validateInput(input, 'Database name'),
+      when: () => !flags.skip,
+    },
+    {
+      type: 'input',
+      name: 'dbUser',
+      message: 'Database username',
+      default: () => DEFAULT_DB_USER,
+      validate: input => validateInput(input, 'Database username'),
+      when: () => !flags.skip,
+    },
+    {
+      type: 'password',
+      name: 'dbPass',
+      message: 'Database password',
+      mask: '*',
+      when: () => !flags.skip,
+    },
+    {
+      type: 'input',
+      name: 'dbHost',
+      message: 'Database host',
+      default: () => DEFAULT_DB_HOST,
+      validate: input => validateInput(input, 'Database host'),
+      when: () => !flags.skip,
+    },
+    {
+      type: 'input',
+      name: 'dbPrefix',
+      message: 'Database prefix',
+      default: () => DEFAULT_DB_PREFIX,
+      when: () => !flags.skip,
+    },
+    {
+      type: 'input',
+      name: 'siteUrl',
+      message: 'Project URL',
+      default: () => `${DEFAULT_SITE_PROTOCOL}://${projectName}.${DEFAULT_SITE_EXTENSION}`,
+    },
+    {
+      type: 'input',
+      name: 'email',
+      message: 'Email',
+      validate: input => validateInput(input, 'Email'),
+      when: () => !flags.skip,
+    },
+    {
+      type: 'autocomplete',
+      name: 'locale',
+      message: 'Core language',
+      source: (answers, input) => search(answers, input, locales),
+      pageSize: 4,
+    },
+    {
+      type: 'checkbox',
+      name: 'plugins',
+      message: 'Plugins',
+      choices: plugins,
+      pageSize: 6,
+    },
+    {
+      type: 'checkbox',
+      name: 'themes',
+      message: 'Themes',
+      choices: themes,
+      pageSize: 6,
+    },
+  ])
+}
