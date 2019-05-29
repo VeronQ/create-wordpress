@@ -8,7 +8,12 @@ const spacer = (counter = 1) => {
   }
 }
 
+const trim = input => {
+  return input.trim()
+}
+
 module.exports = {
   capitalize,
   spacer,
+  trim,
 }

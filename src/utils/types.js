@@ -1,4 +1,5 @@
 const DEFAULT_DB_USER = 'root'
+const DEFAULT_DB_PASS = 'root'
 const DEFAULT_DB_HOST = 'localhost'
 const DEFAULT_DB_PREFIX = 'wp_'
 
@@ -16,6 +17,7 @@ const NPM_INSTALL_URI = 'https://www.npmjs.com/get-npm'
 
 module.exports = {
   DEFAULT_DB_USER,
+  DEFAULT_DB_PASS,
   DEFAULT_DB_HOST,
   DEFAULT_DB_PREFIX,
   ADMIN_USER,

@@ -2,24 +2,26 @@ const Listr = require('listr')
 const execa = require('execa')
 const notifier = require('node-notifier')
 const {cli} = require('cli-ux')
-const {red, cyan, bold} = require('chalk')
+const {red, cyan, yellow, bold} = require('chalk')
 const ask = require('./utils/ask')
 const {capitalize, spacer} = require('./utils/helpers')
 const type = require('./utils/types')
 
 async function create(projectName, flags) {
+  // Set a default value to undefined keys
   const {
-    dbName,
-    dbUser,
-    dbPass,
-    dbHost,
-    dbPrefix,
+    dbName = projectName,
+    dbUser = type.DEFAULT_DB_USER,
+    dbPass = type.DEFAULT_DB_PASS,
+    dbHost = type.DEFAULT_DB_HOST,
+    dbPrefix = type.DEFAULT_DB_PREFIX,
     locale,
     email,
     siteUrl,
     plugins,
     themes,
   } = await ask(projectName, flags)
+
   spacer()
 
   const tasks = new Listr([
@@ -38,7 +40,7 @@ async function create(projectName, flags) {
       task: async () => {
         const check = ('skip' in flags ? '--skip-check' : '')
         try {
-          await execa.shell(`wp config create --dbname=${dbName} --dbuser=${dbUser} --dbpass=${dbPass} --dbhost=${dbHost} --dbprefix=${dbPrefix} --locale=${locale} ${check}`)
+          await execa.shell(`wp config create --dbname=${dbName} --dbuser=${dbUser} --dbpass=${dbPass} --dbhost=${dbHost} --dbprefix=${dbPrefix} ${check}`)
         } catch (error) {
           throw new Error(error.stderr)
         }
@@ -119,15 +121,17 @@ async function create(projectName, flags) {
 
   try {
     await tasks.run().then(() => {
-      const adminUrl = [siteUrl, type.ADMIN_PATH].join('/')
-      spacer()
-      cli.url(cyan(adminUrl), adminUrl)
-      console.log(`\nUsername: ${bold(type.ADMIN_USER)}`)
-      console.log(`Password: ${bold(type.ADMIN_PASSWORD)}\n`)
+      console.log(`\n🎉 Successfully created project ${yellow(projectName)}.\n`)
       notifier.notify({
         title: 'create-wordpress',
-        message: `Successfully created project ${projectName}.`,
+        message: `🎉 Successfully created project ${projectName}.`,
       })
+      if (!flags.skip) {
+        const adminUrl = [siteUrl, type.ADMIN_PATH].join('/')
+        cli.url(cyan(adminUrl), adminUrl)
+        console.log(`\nUsername: ${bold(type.ADMIN_USER)}`)
+        console.log(`Password: ${bold(type.ADMIN_PASSWORD)}\n`)
+      }
       process.exit()
     })
   } catch (error) {
