@@ -19,4 +19,8 @@ module.exports = {
     char: 'n',
     description: 'disable search engine indexing',
   }),
+  usePreset: flags.boolean({
+    char: 'u',
+    description: 'use the last saved preset as default configuration',
+  }),
 }

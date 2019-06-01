@@ -3,9 +3,10 @@ const execa = require('execa')
 const notifier = require('node-notifier')
 const {cli} = require('cli-ux')
 const {red, cyan, yellow, bold} = require('chalk')
-const ask = require('./utils/ask')
+const {inqConfig, inqPreset} = require('./utils/ask')
 const {capitalize, spacer} = require('./utils/helpers')
 const type = require('./utils/types')
+const {setPreset} = require('./store/preset')
 
 async function create(projectName, flags) {
   // Set a default value to undefined keys
@@ -20,7 +21,7 @@ async function create(projectName, flags) {
     siteUrl,
     plugins = [],
     themes = [],
-  } = await ask(projectName, flags)
+  } = await inqConfig(projectName, flags)
 
   spacer()
 
@@ -134,7 +135,24 @@ async function create(projectName, flags) {
         console.log(`\nUsername: ${bold(type.ADMIN_USER)}`)
         console.log(`Password: ${bold(type.ADMIN_PASSWORD)}\n`)
       }
-      process.exit()
+
+      (async () => {
+        const {savePreset} = await inqPreset()
+        if (savePreset) {
+          setPreset({
+            dbUser,
+            dbPass,
+            dbHost,
+            dbPrefix,
+            email,
+            plugins,
+            themes,
+          })
+          console.log(cyan('\nPreset saved, use "--usePreset (alias: -u)" next time.'))
+        }
+        spacer()
+        process.exit()
+      })()
     })
   } catch (error) {
     console.error(red('\nSomething went wrong'))

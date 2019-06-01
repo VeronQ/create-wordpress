@@ -3,6 +3,7 @@ const inquirer = require('inquirer')
 inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
 inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'))
 
+const {getPreset} = require('../store/preset')
 const {locales, themes, plugins} = require('../api')
 const {trim} = require('./helpers')
 const {
@@ -25,7 +26,19 @@ const validateInput = (input, name) => {
   return isValid || `${name} is required`
 }
 
-module.exports = (projectName, flags) => {
+module.exports.inqPreset = () => {
+  return inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'savePreset',
+      message: 'Save this configuration as default preset for the next uses?',
+    },
+  ])
+}
+
+module.exports.inqConfig = (projectName, flags) => {
+  const preset = flags.usePreset ? getPreset() : {}
+
   return inquirer.prompt([
     {
       type: 'input',
@@ -40,7 +53,7 @@ module.exports = (projectName, flags) => {
       type: 'input',
       name: 'dbUser',
       message: 'Database username',
-      default: () => DEFAULT_DB_USER,
+      default: () => preset.dbUser || DEFAULT_DB_USER,
       validate: input => validateInput(input, 'Database username'),
       when: () => !flags.skip,
       filter: trim,
@@ -50,6 +63,7 @@ module.exports = (projectName, flags) => {
       name: 'dbPass',
       message: 'Database password',
       mask: '*',
+      default: () => preset.dbPass || null,
       validate: input => validateInput(input, 'Database password'),
       when: () => !flags.skip,
     },
@@ -57,7 +71,7 @@ module.exports = (projectName, flags) => {
       type: 'input',
       name: 'dbHost',
       message: 'Database host',
-      default: () => DEFAULT_DB_HOST,
+      default: () => preset.dbHost || DEFAULT_DB_HOST,
       validate: input => validateInput(input, 'Database host'),
       when: () => !flags.skip,
       filter: trim,
@@ -66,7 +80,7 @@ module.exports = (projectName, flags) => {
       type: 'input',
       name: 'dbPrefix',
       message: 'Database prefix',
-      default: () => DEFAULT_DB_PREFIX,
+      default: () => preset.dbPrefix || DEFAULT_DB_PREFIX,
       when: () => !flags.skip,
       filter: trim,
     },
@@ -81,6 +95,7 @@ module.exports = (projectName, flags) => {
       type: 'input',
       name: 'email',
       message: 'Email',
+      default: () => preset.email || null,
       validate: input => validateInput(input, 'Email'),
       when: () => !flags.skip,
       filter: trim,
@@ -99,6 +114,7 @@ module.exports = (projectName, flags) => {
       pageSize: 6,
       searchable: true,
       highlight: true,
+      default: () => preset.plugins || [],
       when: () => !flags.skip,
       source: (answers, input) => search(answers, input, plugins),
     },
@@ -109,6 +125,7 @@ module.exports = (projectName, flags) => {
       pageSize: 6,
       searchable: true,
       highlight: true,
+      default: () => preset.themes || [],
       when: () => !flags.skip,
       source: (answers, input) => search(answers, input, themes),
     },

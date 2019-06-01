@@ -1,3 +1,5 @@
+const {homedir} = require('os')
+
 const DEFAULT_DB_USER = 'root'
 const DEFAULT_DB_PASS = 'root'
 const DEFAULT_DB_HOST = 'localhost'
@@ -15,6 +17,10 @@ const WP_INSTALL_URI = 'https://make.wordpress.org/cli/handbook/installing/#reco
 const GIT_INSTALL_URI = 'https://git-scm.com/downloads'
 const NPM_INSTALL_URI = 'https://www.npmjs.com/get-npm'
 
+const HOME_DIRECTORY = homedir()
+const CONFIG_DIRECTORY = 'create-wordpress'
+const PRESET_FILE = 'preset.json'
+
 module.exports = {
   DEFAULT_DB_USER,
   DEFAULT_DB_PASS,
@@ -28,4 +34,7 @@ module.exports = {
   WP_INSTALL_URI,
   GIT_INSTALL_URI,
   NPM_INSTALL_URI,
+  HOME_DIRECTORY,
+  CONFIG_DIRECTORY,
+  PRESET_FILE,
 }
