@@ -18,8 +18,8 @@ async function create(projectName, flags) {
     locale,
     email,
     siteUrl,
-    plugins,
-    themes,
+    plugins = [],
+    themes = [],
   } = await ask(projectName, flags)
 
   spacer()
@@ -88,22 +88,8 @@ async function create(projectName, flags) {
       },
     },
     {
-      title: 'Download themes',
-      skip: async () => {
-        if (!themes.length) {
-          return 'No theme selected'
-        }
-      },
-      task: async () => {
-        try {
-          await execa.shell(`wp theme install ${themes.join(' ')}`)
-        } catch (error) {
-          throw new Error(error.stderr)
-        }
-      },
-    },
-    {
       title: 'Download plugins',
+      enabled: () => !flags.skip,
       skip: async () => {
         if (!plugins.length) {
           return 'No plugin selected'
@@ -112,6 +98,22 @@ async function create(projectName, flags) {
       task: async () => {
         try {
           await execa.shell(`wp plugin install ${plugins.join(' ')}`)
+        } catch (error) {
+          throw new Error(error.stderr)
+        }
+      },
+    },
+    {
+      title: 'Download themes',
+      enabled: () => !flags.skip,
+      skip: async () => {
+        if (!themes.length) {
+          return 'No theme selected'
+        }
+      },
+      task: async () => {
+        try {
+          await execa.shell(`wp theme install ${themes.join(' ')}`)
         } catch (error) {
           throw new Error(error.stderr)
         }

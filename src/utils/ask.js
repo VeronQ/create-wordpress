@@ -99,6 +99,7 @@ module.exports = (projectName, flags) => {
       pageSize: 6,
       searchable: true,
       highlight: true,
+      when: () => !flags.skip,
       source: (answers, input) => search(answers, input, plugins),
     },
     {
@@ -108,6 +109,7 @@ module.exports = (projectName, flags) => {
       pageSize: 6,
       searchable: true,
       highlight: true,
+      when: () => !flags.skip,
       source: (answers, input) => search(answers, input, themes),
     },
   ])
