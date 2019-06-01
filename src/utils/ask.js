@@ -1,6 +1,8 @@
+const fuzzy = require('fuzzy')
 const inquirer = require('inquirer')
 inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
-const fuzzy = require('fuzzy')
+inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'))
+
 const {locales, themes, plugins} = require('../api')
 const {trim} = require('./helpers')
 const {
@@ -12,11 +14,9 @@ const {
 } = require('./types')
 
 const search = (answers, input = '', api) => {
-  return new Promise(function (resolve) {
+  return new Promise(resolve => {
     const result = fuzzy.filter(input, api)
-    resolve(
-      result.map(el => el.original),
-    )
+    resolve(result.map(el => el.original))
   })
 }
 
@@ -89,22 +89,26 @@ module.exports = (projectName, flags) => {
       type: 'autocomplete',
       name: 'locale',
       message: 'Core language',
-      source: (answers, input) => search(answers, input, locales),
       pageSize: 4,
+      source: (answers, input) => search(answers, input, locales),
     },
     {
-      type: 'checkbox',
+      type: 'checkbox-plus',
       name: 'plugins',
       message: 'Plugins',
-      choices: plugins,
       pageSize: 6,
+      searchable: true,
+      highlight: true,
+      source: (answers, input) => search(answers, input, plugins),
     },
     {
-      type: 'checkbox',
+      type: 'checkbox-plus',
       name: 'themes',
       message: 'Themes',
-      choices: themes,
       pageSize: 6,
+      searchable: true,
+      highlight: true,
+      source: (answers, input) => search(answers, input, themes),
     },
   ])
 }
