@@ -3,6 +3,7 @@ const path = require('path')
 const inquirer = require('inquirer')
 const validateProjectName = require('validate-npm-package-name')
 const {red, cyan, yellow} = require('chalk')
+const create = require('./create')
 
 async function init(projectName, flags) {
   const cwd = process.cwd()
@@ -12,12 +13,13 @@ async function init(projectName, flags) {
   const result = validateProjectName(name)
 
   if (!result.validForNewPackages) {
-    const errors = result.errors || []
-    const warnings = result.warnings || []
-    const log = [...errors, ...warnings]
-    console.error(red(`Invalid project name: "${name}"`))
-    if (errors.length) {
-      console.error(red.dim(`Error: ${log[0]}.`))
+    const log = [
+      ...result.errors || [],
+      ...result.warnings || [],
+    ]
+    console.error(red.bold(`\nInvalid project name: "${name}"`))
+    if (log.length) {
+      console.error(red(`Error: ${log[0]}.\n`))
     }
     process.exit(1)
   }
@@ -46,7 +48,7 @@ async function init(projectName, flags) {
   }
 
   console.log(`\nCreating project in ${yellow(targetDir)}\n`)
-  require('./create')(name, flags)
+  create(name, flags)
 }
 
 module.exports = (...args) => {
