@@ -9,7 +9,7 @@ const type = require('./utils/types')
 const {setPreset} = require('./store/preset')
 
 async function create(projectName, flags) {
-  // Set a default value to undefined keys
+  // Set a default value to undefined keys (if --skip flag)
   const {
     dbName = projectName,
     dbUser = type.DEFAULT_DB_USER,

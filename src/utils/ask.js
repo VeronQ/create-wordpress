@@ -5,14 +5,18 @@ inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'
 
 const {getPreset} = require('../store/preset')
 const {locales, themes, plugins} = require('../api')
-const {trim} = require('./helpers')
+const {trim, arrayColumn} = require('./helpers')
 const {
   DEFAULT_DB_USER,
   DEFAULT_DB_HOST,
   DEFAULT_DB_PREFIX,
   DEFAULT_SITE_EXTENSION,
   DEFAULT_SITE_PROTOCOL,
+  PAGE_SIZE,
 } = require('./types')
+
+const namePlugins = arrayColumn(plugins, 0)
+const nameThemes = arrayColumn(themes, 0)
 
 const search = (answers, input = '', api) => {
   return new Promise(resolve => {
@@ -104,30 +108,36 @@ module.exports.inqConfig = (projectName, flags) => {
       type: 'autocomplete',
       name: 'locale',
       message: 'Core language',
-      pageSize: 4,
+      pageSize: PAGE_SIZE,
       source: (answers, input) => search(answers, input, locales),
     },
     {
       type: 'checkbox-plus',
       name: 'plugins',
       message: 'Plugins',
-      pageSize: 6,
+      pageSize: PAGE_SIZE,
       searchable: true,
       highlight: true,
       default: () => preset.plugins || [],
       when: () => !flags.skip,
-      source: (answers, input) => search(answers, input, plugins),
+      source: (answers, input) => search(answers, input, namePlugins),
+      filter: input => {
+        return input.map(x => plugins[namePlugins.indexOf(x)][1])
+      },
     },
     {
       type: 'checkbox-plus',
       name: 'themes',
       message: 'Themes',
-      pageSize: 6,
+      pageSize: PAGE_SIZE,
       searchable: true,
       highlight: true,
       default: () => preset.themes || [],
       when: () => !flags.skip,
-      source: (answers, input) => search(answers, input, themes),
+      source: (answers, input) => search(answers, input, nameThemes),
+      filter: input => {
+        return input.map(x => themes[nameThemes.indexOf(x)][1])
+      },
     },
   ])
 }

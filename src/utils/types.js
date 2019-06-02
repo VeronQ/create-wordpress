@@ -21,6 +21,8 @@ const HOME_DIRECTORY = homedir()
 const CONFIG_DIRECTORY = 'create-wordpress'
 const PRESET_FILE = 'preset.json'
 
+const PAGE_SIZE = 4
+
 module.exports = {
   DEFAULT_DB_USER,
   DEFAULT_DB_PASS,
@@ -37,4 +39,5 @@ module.exports = {
   HOME_DIRECTORY,
   CONFIG_DIRECTORY,
   PRESET_FILE,
+  PAGE_SIZE
 }

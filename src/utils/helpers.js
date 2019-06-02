@@ -12,8 +12,13 @@ const trim = input => {
   return input.trim()
 }
 
+const arrayColumn = (arr, n) => {
+  return arr.map(x => x[n])
+}
+
 module.exports = {
   capitalize,
   spacer,
   trim,
+  arrayColumn,
 }
