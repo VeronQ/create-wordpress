@@ -1,8 +1,13 @@
+// Native
 const fs = require('fs-extra')
 const path = require('path')
+
+// Packages
 const inquirer = require('inquirer')
 const validateProjectName = require('validate-npm-package-name')
 const {red, cyan, yellow} = require('chalk')
+
+// Source
 const create = require('./create')
 
 async function init(projectName, flags) {

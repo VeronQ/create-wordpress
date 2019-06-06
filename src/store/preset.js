@@ -1,6 +1,13 @@
+// Native
 const fs = require('fs')
 const path = require('path')
-const {HOME_DIRECTORY, CONFIG_DIRECTORY, PRESET_FILE} = require('../utils/types')
+
+// Helpers
+const {
+  HOME_DIRECTORY,
+  CONFIG_DIRECTORY,
+  PRESET_FILE,
+} = require('../utils/types')
 
 const presetFile = path.join(HOME_DIRECTORY, CONFIG_DIRECTORY, PRESET_FILE)
 const presetFileExists = fs.existsSync(path.dirname(presetFile))

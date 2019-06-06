@@ -1,12 +1,17 @@
+// Packages
 const Listr = require('listr')
 const execa = require('execa')
 const notifier = require('node-notifier')
 const {cli} = require('cli-ux')
 const {red, cyan, yellow, bold} = require('chalk')
+
+// Source
+const {setPreset} = require('./store/preset')
 const {inqConfig, inqPreset} = require('./utils/ask')
+
+// Helpers
 const {capitalize, spacer} = require('./utils/helpers')
 const type = require('./utils/types')
-const {setPreset} = require('./store/preset')
 
 async function create(projectName, flags) {
   // Set a default value to undefined keys (if --skip flag)
@@ -22,8 +27,6 @@ async function create(projectName, flags) {
     plugins = [],
     themes = [],
   } = await inqConfig(projectName, flags)
-
-  spacer()
 
   const tasks = new Listr([
     {
@@ -122,6 +125,8 @@ async function create(projectName, flags) {
     },
   ])
 
+  spacer()
+
   try {
     await tasks.run().then(() => {
       console.log(`\n🎉 Successfully created project ${yellow(projectName)}.\n`)
@@ -145,6 +150,7 @@ async function create(projectName, flags) {
             dbHost,
             dbPrefix,
             email,
+            locale,
             plugins,
             themes,
           })

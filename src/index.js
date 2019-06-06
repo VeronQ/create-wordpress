@@ -1,4 +1,7 @@
+// Packages
 const {Command} = require('@oclif/command')
+
+// Source
 const {cliArgs, cliFlags} = require('./cli')
 const {description} = require('../package.json')
 const init = require('./init')
