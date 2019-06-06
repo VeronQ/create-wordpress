@@ -21,7 +21,9 @@ const {
 
 // Get only the names
 const namePlugins = arrayColumn(plugins, 0)
+const slugPlugins = arrayColumn(plugins, 1)
 const nameThemes = arrayColumn(themes, 0)
+const slugThemes = arrayColumn(themes, 1)
 
 // Search through api results
 const search = (answers, input = '', api) => {
@@ -33,6 +35,10 @@ const search = (answers, input = '', api) => {
 
 const getSlug = (input, arr, reference) => {
   return input.map(x => arr[reference.indexOf(x)][1])
+}
+
+const getName = (input, arr, reference) => {
+  return input.map(x => arr[reference.indexOf(x)][0])
 }
 
 // Preset-related questions
@@ -130,7 +136,7 @@ module.exports.inqConfig = (projectName, flags) => {
       searchable: true,
       highlight: true,
       when: !skip,
-      default: preset.plugins || [],
+      default: () => getName(preset.plugins, plugins, slugPlugins) || [],
       source: (answers, input) => search(answers, input, namePlugins),
       filter: input => getSlug(input, plugins, namePlugins),
     },
@@ -142,7 +148,7 @@ module.exports.inqConfig = (projectName, flags) => {
       searchable: true,
       highlight: true,
       when: !skip,
-      default: preset.themes || [],
+      default: () => getName(preset.themes, themes, slugThemes) || [],
       source: (answers, input) => search(answers, input, nameThemes),
       filter: input => getSlug(input, themes, nameThemes),
     },
