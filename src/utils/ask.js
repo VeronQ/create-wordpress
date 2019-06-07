@@ -9,7 +9,7 @@ const {getPreset} = require('../store/preset')
 const {locales, themes, plugins} = require('../api')
 
 // Helpers
-const {trim, validateInput, arrayColumn} = require('./helpers')
+const {trim, validateInput, transposeArray} = require('./helpers')
 const {
   DEFAULT_DB_USER,
   DEFAULT_DB_HOST,
@@ -19,11 +19,9 @@ const {
   PAGE_SIZE,
 } = require('./types')
 
-// Get only the names
-const namePlugins = arrayColumn(plugins, 0)
-const slugPlugins = arrayColumn(plugins, 1)
-const nameThemes = arrayColumn(themes, 0)
-const slugThemes = arrayColumn(themes, 1)
+// Separate slug and name arrays
+const [namePlugins, slugPlugins] = transposeArray(plugins)
+const [nameThemes, slugThemes] = transposeArray(themes)
 
 // Search through api results
 const search = (answers, input = '', api) => {
@@ -33,11 +31,11 @@ const search = (answers, input = '', api) => {
   })
 }
 
-const getSlug = (input, arr, reference) => {
+const getSlugByName = (input, arr, reference) => {
   return input.map(x => arr[reference.indexOf(x)][1])
 }
 
-const getName = (input, arr, reference) => {
+const getNameBySlug = (input, arr, reference) => {
   return input.map(x => arr[reference.indexOf(x)][0])
 }
 
@@ -136,9 +134,9 @@ module.exports.inqConfig = (projectName, flags) => {
       searchable: true,
       highlight: true,
       when: !skip,
-      default: () => getName(preset.plugins, plugins, slugPlugins) || [],
+      default: () => getNameBySlug(preset.plugins, plugins, slugPlugins) || [],
       source: (answers, input) => search(answers, input, namePlugins),
-      filter: input => getSlug(input, plugins, namePlugins),
+      filter: input => getSlugByName(input, plugins, namePlugins),
     },
     {
       type: 'checkbox-plus',
@@ -148,9 +146,9 @@ module.exports.inqConfig = (projectName, flags) => {
       searchable: true,
       highlight: true,
       when: !skip,
-      default: () => getName(preset.themes, themes, slugThemes) || [],
+      default: () => getNameBySlug(preset.themes, themes, slugThemes) || [],
       source: (answers, input) => search(answers, input, nameThemes),
-      filter: input => getSlug(input, themes, nameThemes),
+      filter: input => getSlugByName(input, themes, nameThemes),
     },
   ])
 }
