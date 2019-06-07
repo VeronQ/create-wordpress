@@ -17,7 +17,9 @@ const trim = input => {
 
 // Transpose multi dimensional arrays
 const transposeArray = array => {
-  return array[0].map((col, i) => array.map(row => row[i]))
+  return array[0].map((col, i) => {
+    return array.map(row => row[i])
+  })
 }
 
 // Check if input is not empty

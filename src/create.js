@@ -15,6 +15,7 @@ const type = require('./utils/types')
 
 async function create(projectName, flags) {
   // Set a default value to undefined keys (if --skip flag)
+  const settings = await inqConfig(projectName, flags)
   const {
     dbName = projectName,
     dbUser = type.DEFAULT_DB_USER,
@@ -26,7 +27,7 @@ async function create(projectName, flags) {
     siteUrl,
     plugins = [],
     themes = [],
-  } = await inqConfig(projectName, flags)
+  } = settings
 
   const tasks = new Listr([
     {
@@ -144,16 +145,7 @@ async function create(projectName, flags) {
       (async () => {
         const {savePreset} = await inqPreset()
         if (savePreset) {
-          setPreset({
-            dbUser,
-            dbPass,
-            dbHost,
-            dbPrefix,
-            email,
-            locale,
-            plugins,
-            themes,
-          })
+          setPreset(settings)
           console.log(cyan('\nPreset saved, use "--usePreset (alias: -u)" next time.'))
         }
         spacer()

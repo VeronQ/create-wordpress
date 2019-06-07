@@ -12,7 +12,9 @@ const {
 const presetFile = path.join(HOME_DIRECTORY, CONFIG_DIRECTORY, PRESET_FILE)
 const presetFileExists = fs.existsSync(path.dirname(presetFile))
 
-const createPresetFile = () => fs.mkdirSync(path.dirname(presetFile))
+const createPresetFile = () => {
+  return fs.mkdirSync(path.dirname(presetFile))
+}
 
 module.exports.getPreset = () => {
   if (!presetFileExists) {
