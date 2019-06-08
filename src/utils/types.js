@@ -10,6 +10,7 @@ const DEFAULT_SITE_PROTOCOL = 'http'
 
 const ADMIN_USER = 'admin'
 const ADMIN_PASSWORD = 'admin'
+const ADMIN_PATH = 'wp-admin'
 
 const HOME_DIRECTORY = homedir()
 const CONFIG_DIRECTORY = 'create-wordpress'
@@ -26,6 +27,7 @@ module.exports = {
   DEFAULT_SITE_PROTOCOL,
   ADMIN_USER,
   ADMIN_PASSWORD,
+  ADMIN_PATH,
   HOME_DIRECTORY,
   CONFIG_DIRECTORY,
   PRESET_FILE,
