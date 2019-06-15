@@ -1,64 +1,64 @@
 // Native
-const fs = require('fs-extra')
-const path = require('path')
+const fs = require('fs-extra');
+const path = require('path');
 
 // Packages
-const inquirer = require('inquirer')
-const validateProjectName = require('validate-npm-package-name')
-const {red, cyan, yellow} = require('chalk')
+const inquirer = require('inquirer');
+const validateProjectName = require('validate-npm-package-name');
+const { red, cyan, yellow } = require('chalk');
 
 // Source
-const create = require('./create')
+const create = require('./create');
 
 async function init(projectName, flags) {
-  const cwd = process.cwd()
-  const inCurrent = (projectName === '.')
-  const name = inCurrent ? path.relative('../', cwd) : projectName
-  const targetDir = path.resolve(cwd, projectName || '.')
-  const result = validateProjectName(name)
+  const cwd = process.cwd();
+  const inCurrent = (projectName === '.');
+  const name = inCurrent ? path.relative('../', cwd) : projectName;
+  const targetDir = path.resolve(cwd, projectName || '.');
+  const result = validateProjectName(name);
 
   if (!result.validForNewPackages) {
     const log = [
       ...result.errors || [],
-      ...result.warnings || [],
-    ]
-    console.error(red.bold(`\nInvalid project name: "${name}"`))
+      ...result.warnings || []
+    ];
+    console.error(red.bold(`\nInvalid project name: "${name}"`));
     if (log.length) {
-      console.error(red(`Error: ${log[0]}.\n`))
+      console.error(red(`Error: ${log[0]}.\n`));
     }
-    process.exit(1)
+    process.exit(1);
   }
 
   if (fs.existsSync(targetDir)) {
     if ('force' in flags && !inCurrent) {
-      await fs.remove(targetDir)
+      await fs.remove(targetDir);
     } else if (inCurrent) {
-      const {ok} = await inquirer.prompt([
+      const { ok } = await inquirer.prompt([
         {
           name: 'ok',
           type: 'confirm',
-          message: 'Generate project in current directory?',
-        },
-      ])
-      if (!ok) return
+          message: 'Generate project in current directory?'
+        }
+      ]);
+      if (!ok) return;
     } else {
-      console.error(red(`\nTarget directory ${cyan(targetDir)} already exists.`))
-      process.exit(1)
+      console.error(red(`\nTarget directory ${cyan(targetDir)} already exists.`));
+      process.exit(1);
     }
   }
 
   if (!fs.existsSync(targetDir)) {
-    fs.mkdirSync(name)
-    process.chdir(name)
+    fs.mkdirSync(name);
+    process.chdir(name);
   }
 
-  console.log(`\nCreating project in ${yellow(targetDir)}\n`)
-  create(name, flags)
+  console.log(`\nCreating project in ${yellow(targetDir)}\n`);
+  create(name, flags);
 }
 
 module.exports = (...args) => {
   return init(...args).catch(error => {
-    console.error(error)
-    process.exit(1)
-  })
-}
+    console.error(error);
+    process.exit(1);
+  });
+};

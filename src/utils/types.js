@@ -1,22 +1,22 @@
-const {homedir} = require('os')
+const { homedir } = require('os');
 
-const DEFAULT_DB_USER = 'root'
-const DEFAULT_DB_PASS = 'root'
-const DEFAULT_DB_HOST = 'localhost'
-const DEFAULT_DB_PREFIX = 'wp_'
+const DEFAULT_DB_USER = 'root';
+const DEFAULT_DB_PASS = 'root';
+const DEFAULT_DB_HOST = 'localhost';
+const DEFAULT_DB_PREFIX = 'wp_';
 
-const DEFAULT_SITE_EXTENSION = 'local'
-const DEFAULT_SITE_PROTOCOL = 'http'
+const DEFAULT_SITE_EXTENSION = 'local';
+const DEFAULT_SITE_PROTOCOL = 'http';
 
-const ADMIN_USER = 'admin'
-const ADMIN_PASSWORD = 'admin'
-const ADMIN_PATH = 'wp-admin'
+const ADMIN_USER = 'admin';
+const ADMIN_PASSWORD = 'admin';
+const ADMIN_PATH = 'wp-admin';
 
-const HOME_DIRECTORY = homedir()
-const CONFIG_DIRECTORY = 'create-wordpress'
-const PRESET_FILE = 'preset.json'
+const HOME_DIRECTORY = homedir();
+const CONFIG_DIRECTORY = 'create-wordpress';
+const PRESET_FILE = 'preset.json';
 
-const PAGE_SIZE = 4
+const PAGE_SIZE = 4;
 
 module.exports = {
   DEFAULT_DB_USER,
@@ -31,5 +31,5 @@ module.exports = {
   HOME_DIRECTORY,
   CONFIG_DIRECTORY,
   PRESET_FILE,
-  PAGE_SIZE,
-}
+  PAGE_SIZE
+};

@@ -1,22 +1,82 @@
 [
-  ["OceanWP", "oceanwp"],
-  ["Astra", "astra"],
-  ["Sydney", "sydney"],
-  ["Storefront", "storefront"],
-  ["GeneratePress", "generatepress"],
-  ["ColorMag", "colormag"],
-  ["Hestia", "hestia"],
-  ["Shapely", "shapely"],
-  ["Zerif Lite", "zerif-lite"],
-  ["Customizr", "customizr"],
-  ["Vantage", "vantage"],
-  ["OnePress", "onepress"],
-  ["Spacious", "spacious"],
-  ["Hueman", "hueman"],
-  ["Total", "total"],
-  ["Responsive", "responsive"],
-  ["Mesmerize", "mesmerize"],
-  ["Virtue", "virtue"],
-  ["Sparkling", "sparkling"],
-  ["Ashe", "ashe"]
+  [
+    "OceanWP",
+    "oceanwp"
+  ],
+  [
+    "Astra",
+    "astra"
+  ],
+  [
+    "Sydney",
+    "sydney"
+  ],
+  [
+    "Storefront",
+    "storefront"
+  ],
+  [
+    "GeneratePress",
+    "generatepress"
+  ],
+  [
+    "ColorMag",
+    "colormag"
+  ],
+  [
+    "Hestia",
+    "hestia"
+  ],
+  [
+    "Shapely",
+    "shapely"
+  ],
+  [
+    "Zerif Lite",
+    "zerif-lite"
+  ],
+  [
+    "Customizr",
+    "customizr"
+  ],
+  [
+    "Vantage",
+    "vantage"
+  ],
+  [
+    "OnePress",
+    "onepress"
+  ],
+  [
+    "Spacious",
+    "spacious"
+  ],
+  [
+    "Hueman",
+    "hueman"
+  ],
+  [
+    "Total",
+    "total"
+  ],
+  [
+    "Responsive",
+    "responsive"
+  ],
+  [
+    "Mesmerize",
+    "mesmerize"
+  ],
+  [
+    "Virtue",
+    "virtue"
+  ],
+  [
+    "Sparkling",
+    "sparkling"
+  ],
+  [
+    "Ashe",
+    "ashe"
+  ]
 ]
