@@ -6,7 +6,7 @@ const { cli } = require('cli-ux');
 const { red, cyan, yellow, bold } = require('chalk');
 
 // Source
-const { setPreset } = require('./store/preset');
+const presetHandler  = require('./store/preset');
 const { inqConfig, inqPreset } = require('./utils/ask');
 
 // Helpers
@@ -145,7 +145,7 @@ async function create(projectName, flags) {
       (async () => {
         const { savePreset } = await inqPreset();
         if (savePreset) {
-          setPreset(settings);
+          presetHandler.set(settings);
           console.log(cyan('\nPreset saved, use "--usePreset (alias: -u)" next time.'));
         }
         spacer();

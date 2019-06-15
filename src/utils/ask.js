@@ -5,7 +5,7 @@ inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
 inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'));
 
 // Source
-const { getPreset } = require('../store/preset');
+const presetHandler = require('../store/preset');
 const { locales, themes, plugins } = require('../api');
 
 // Helpers
@@ -50,7 +50,7 @@ module.exports.inqPreset = () => {
   ]);
 };
 
-// create-related questions
+// Create-related questions
 module.exports.inqCreate = () => {
   return inquirer.prompt([
     {
@@ -63,7 +63,7 @@ module.exports.inqCreate = () => {
 
 // Config-related questions
 module.exports.inqConfig = (projectName, flags) => {
-  const preset = flags.usePreset ? getPreset() : {};
+  const preset = flags.usePreset ? presetHandler.get() : {};
   const { skip } = flags;
   let filteredLocales = [...locales];
 

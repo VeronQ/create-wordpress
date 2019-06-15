@@ -18,16 +18,21 @@ const createPresetFile = () => {
   return fse.createFileSync(presetFile);
 };
 
-module.exports.getPreset = () => {
+const getPreset = () => {
   if (!presetFileExists) {
     return {};
   }
   return fse.readJsonSync(presetFile);
 };
 
-module.exports.setPreset = (data) => {
+const setPreset = (data) => {
   if (!presetFileExists) {
     createPresetFile();
   }
   fse.writeJsonSync(presetFile, data);
+};
+
+module.exports = {
+  get: getPreset,
+  set: setPreset
 };
