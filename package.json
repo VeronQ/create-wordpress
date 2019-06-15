@@ -2,7 +2,7 @@
   "name": "create-wordpress",
   "description": "WordPress automated installation",
   "version": "0.0.0",
-  "author": "Quentin Véron @VeronQ",
+  "author": "Quentin Véron",
   "bin": {
     "create-wordpress": "./bin/run"
   },
@@ -22,16 +22,14 @@
     "listr": "^0.14.3",
     "node-notifier": "^5.4.0",
     "os": "^0.1.1",
-    "prettier": "^1.18.0",
     "validate-npm-package-name": "^3.0.0"
   },
   "devDependencies": {
     "@oclif/test": "^1.2.4",
     "chai": "^4.2.0",
-    "eslint": "^5.16.0",
-    "eslint-config-oclif": "^3.1.0",
     "mocha": "^6.1.4",
-    "nyc": "^14.1.1"
+    "nyc": "^14.1.1",
+    "prettier": "1.18.2"
   },
   "engines": {
     "node": ">=8.0.0"
