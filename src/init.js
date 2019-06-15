@@ -1,14 +1,14 @@
 // Native
-const fs = require('fs-extra');
 const path = require('path');
 
 // Packages
-const inquirer = require('inquirer');
+const fse = require('fs-extra');
 const validateProjectName = require('validate-npm-package-name');
 const { red, cyan, yellow } = require('chalk');
 
 // Source
 const create = require('./create');
+const { inqCreate } = require('./utils/ask');
 
 async function init(projectName, flags) {
   const cwd = process.cwd();
@@ -23,23 +23,15 @@ async function init(projectName, flags) {
       ...result.warnings || []
     ];
     console.error(red.bold(`\nInvalid project name: "${name}"`));
-    if (log.length) {
-      console.error(red(`Error: ${log[0]}.\n`));
-    }
+    console.error(red(`Error: ${log[0]}.\n`));
     process.exit(1);
   }
 
-  if (fs.existsSync(targetDir)) {
+  if (fse.existsSync(targetDir)) {
     if ('force' in flags && !inCurrent) {
-      await fs.remove(targetDir);
+      await fse.remove(targetDir);
     } else if (inCurrent) {
-      const { ok } = await inquirer.prompt([
-        {
-          name: 'ok',
-          type: 'confirm',
-          message: 'Generate project in current directory?'
-        }
-      ]);
+      const { ok } = await inqCreate();
       if (!ok) return;
     } else {
       console.error(red(`\nTarget directory ${cyan(targetDir)} already exists.`));
@@ -47,8 +39,8 @@ async function init(projectName, flags) {
     }
   }
 
-  if (!fs.existsSync(targetDir)) {
-    fs.mkdirSync(name);
+  if (!fse.existsSync(targetDir)) {
+    fse.mkdirSync(name);
     process.chdir(name);
   }
 
@@ -57,7 +49,7 @@ async function init(projectName, flags) {
 }
 
 module.exports = (...args) => {
-  return init(...args).catch(error => {
+  return init(...args).catch((error) => {
     console.error(error);
     process.exit(1);
   });

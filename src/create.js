@@ -160,7 +160,7 @@ async function create(projectName, flags) {
 }
 
 module.exports = (...args) => {
-  return create(...args).catch(error => {
+  return create(...args).catch((error) => {
     console.error(error);
     process.exit(1);
   });

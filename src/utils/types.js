@@ -14,7 +14,7 @@ const ADMIN_PATH = 'wp-admin';
 
 const HOME_DIRECTORY = homedir();
 const CONFIG_DIRECTORY = 'create-wordpress';
-const PRESET_FILE = 'preset.json';
+const PRESET_FILE_NAME = 'preset.json';
 
 const PAGE_SIZE = 4;
 
@@ -30,6 +30,6 @@ module.exports = {
   ADMIN_PATH,
   HOME_DIRECTORY,
   CONFIG_DIRECTORY,
-  PRESET_FILE,
+  PRESET_FILE_NAME,
   PAGE_SIZE
 };

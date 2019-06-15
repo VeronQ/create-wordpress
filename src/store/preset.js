@@ -1,32 +1,33 @@
 // Native
-const fs = require('fs');
 const path = require('path');
+
+// Packages
+const fse = require('fs-extra');
 
 // Helpers
 const {
   HOME_DIRECTORY,
   CONFIG_DIRECTORY,
-  PRESET_FILE
+  PRESET_FILE_NAME
 } = require('../utils/types');
 
-const presetFile = path.join(HOME_DIRECTORY, CONFIG_DIRECTORY, PRESET_FILE);
-const presetFileExists = fs.existsSync(path.dirname(presetFile));
+const presetFile = path.join(HOME_DIRECTORY, CONFIG_DIRECTORY, PRESET_FILE_NAME);
+const presetFileExists = fse.existsSync(presetFile);
 
 const createPresetFile = () => {
-  return fs.mkdirSync(path.dirname(presetFile));
+  return fse.createFileSync(presetFile);
 };
 
 module.exports.getPreset = () => {
   if (!presetFileExists) {
     return {};
   }
-  return JSON.parse(fs.readFileSync(presetFile, { encoding: 'utf-8' }));
+  return fse.readJsonSync(presetFile);
 };
 
-module.exports.setPreset = (preset) => {
+module.exports.setPreset = (data) => {
   if (!presetFileExists) {
     createPresetFile();
   }
-  const data = JSON.stringify(preset);
-  fs.writeFileSync(presetFile, data, { encoding: 'utf-8' });
+  fse.writeJsonSync(presetFile, data);
 };

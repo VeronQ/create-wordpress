@@ -50,10 +50,22 @@ module.exports.inqPreset = () => {
   ]);
 };
 
+// create-related questions
+module.exports.inqCreate = () => {
+  return inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'ok',
+      message: 'Generate project in current directory?'
+    }
+  ]);
+};
+
 // Config-related questions
 module.exports.inqConfig = (projectName, flags) => {
   const preset = flags.usePreset ? getPreset() : {};
   const { skip } = flags;
+  console.log(preset.locale);
 
   return inquirer.prompt([
     {
