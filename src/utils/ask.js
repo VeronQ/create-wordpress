@@ -65,7 +65,15 @@ module.exports.inqCreate = () => {
 module.exports.inqConfig = (projectName, flags) => {
   const preset = flags.usePreset ? getPreset() : {};
   const { skip } = flags;
-  console.log(preset.locale);
+  let filteredLocales = [...locales];
+
+  if (preset && preset.locale && locales.includes(preset.locale)) {
+    // Move the default locale to the first position (as inquirer-autocomplete-prompt doesn't support 'default')
+    filteredLocales = [
+      preset.locale,
+      ...filteredLocales.filter(item => item !== preset.locale)
+    ]
+  }
 
   return inquirer.prompt([
     {
@@ -134,9 +142,8 @@ module.exports.inqConfig = (projectName, flags) => {
       type: 'autocomplete',
       name: 'locale',
       message: 'Core language',
-      default: preset.locale || null,
       pageSize: PAGE_SIZE,
-      source: (answers, input) => search(answers, input, locales)
+      source: (answers, input) => search(answers, input, filteredLocales)
     },
     {
       type: 'checkbox-plus',
