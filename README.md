@@ -8,4 +8,4 @@ WordPress automated installation
 $ create-wordpress <projectName>
 ```
 
-![Demo create-wordpress](https://raw.githubusercontent.com/VeronQ/create-wordpress/develop/doc/demo.gif)
+![Demo CLI](../assets/demo.gif?raw=true)
