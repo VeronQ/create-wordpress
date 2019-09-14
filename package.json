@@ -1,8 +1,8 @@
 {
   "name": "create-wordpress",
   "description": "WordPress automated installation",
-  "version": "0.0.0",
-  "author": "Quentin Véron",
+  "version": "1.0.0",
+  "author": "Quentin Veron",
   "bin": {
     "create-wordpress": "./bin/run"
   },
@@ -12,13 +12,12 @@
     "@oclif/config": "^1.13.0",
     "@oclif/plugin-help": "^2.2.0",
     "chalk": "^2.4.2",
-    "cli-ux": "^5.2.1",
     "execa": "^1.0.0",
     "fs-extra": "^8.0.1",
     "fuzzy": "^0.1.3",
+    "hyperlinker": "^1.0.0",
     "inquirer": "^6.3.1",
     "inquirer-autocomplete-prompt": "^1.0.1",
-    "inquirer-checkbox-plus-prompt": "^1.0.1",
     "listr": "^0.14.3",
     "node-notifier": "^5.4.0",
     "os": "^0.1.1",
