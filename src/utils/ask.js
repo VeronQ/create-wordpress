@@ -1,54 +1,31 @@
 // Packages
-const fuzzy = require('fuzzy');
-const inquirer = require('inquirer');
-inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
-inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'));
+const fuzzy = require('fuzzy')
+const inquirer = require('inquirer')
+inquirer.registerPrompt('autocomplete',
+  require('inquirer-autocomplete-prompt'))
 
 // Source
-const presetHandler = require('../store/preset');
-const { locales, themes, plugins } = require('../api');
+const presetHandler = require('../store/preset')
+const { locales } = require('../api')
 
 // Helpers
-const { trim, validateInput, transposeArray } = require('./helpers');
+const { trim, validateInput } = require('./helpers')
 const {
   DEFAULT_DB_USER,
   DEFAULT_DB_HOST,
   DEFAULT_DB_PREFIX,
   DEFAULT_SITE_EXTENSION,
   DEFAULT_SITE_PROTOCOL,
-  PAGE_SIZE
-} = require('./types');
-
-// Separate slug and name arrays
-const [namePlugins, slugPlugins] = transposeArray(plugins);
-const [nameThemes, slugThemes] = transposeArray(themes);
+  PAGE_SIZE,
+} = require('./types')
 
 // Search through api results
 const search = (answers, input = '', api) => {
   return new Promise(resolve => {
-    const result = fuzzy.filter(input, api);
-    resolve(result.map(el => el.original));
-  });
-};
-
-const getSlugByName = (input, arr, reference) => {
-  return input.map(x => arr[reference.indexOf(x)][1]);
-};
-
-const getNameBySlug = (input, arr, reference) => {
-  return input.map(x => arr[reference.indexOf(x)][0]);
-};
-
-// Preset-related questions
-module.exports.inqPreset = () => {
-  return inquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'savePreset',
-      message: 'Save this configuration as default preset for the next uses?'
-    }
-  ]);
-};
+    const result = fuzzy.filter(input, api)
+    resolve(result.map(el => el.original))
+  })
+}
 
 // Create-related questions
 module.exports.inqCreate = () => {
@@ -56,22 +33,33 @@ module.exports.inqCreate = () => {
     {
       type: 'confirm',
       name: 'ok',
-      message: 'Generate project in current directory?'
-    }
-  ]);
-};
+      message: 'Generate project in current directory?',
+    },
+  ])
+}
+
+// Preset-related questions
+module.exports.inqPreset = () => {
+  return inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'savePreset',
+      message: 'Save this configuration as default preset for the next uses?',
+    },
+  ])
+}
 
 // Config-related questions
 module.exports.inqConfig = (projectName, flags) => {
-  const preset = flags.usePreset ? presetHandler.get() : {};
-  const { skip } = flags;
-  let filteredLocales = [...locales];
+  const preset = flags.preset ? presetHandler.get() : {}
+  const { skip } = flags
+  let filteredLocales = [...locales]
 
   if (preset && preset.locale && locales.includes(preset.locale)) {
     // Move the default locale to the first position (as inquirer-autocomplete-prompt doesn't support 'default')
     filteredLocales = [
       preset.locale,
-      ...filteredLocales.filter(item => item !== preset.locale)
+      ...filteredLocales.filter(item => item !== preset.locale),
     ]
   }
 
@@ -83,7 +71,7 @@ module.exports.inqConfig = (projectName, flags) => {
       when: !skip,
       default: projectName,
       validate: input => validateInput(input, 'Database name'),
-      filter: trim
+      filter: trim,
     },
     {
       type: 'input',
@@ -92,7 +80,7 @@ module.exports.inqConfig = (projectName, flags) => {
       when: !skip,
       default: preset.dbUser || DEFAULT_DB_USER,
       validate: input => validateInput(input, 'Database username'),
-      filter: trim
+      filter: trim,
     },
     {
       type: 'password',
@@ -101,7 +89,7 @@ module.exports.inqConfig = (projectName, flags) => {
       mask: '*',
       when: !skip,
       default: preset.dbPass || null,
-      validate: input => validateInput(input, 'Database password')
+      validate: input => validateInput(input, 'Database password'),
     },
     {
       type: 'input',
@@ -110,7 +98,7 @@ module.exports.inqConfig = (projectName, flags) => {
       when: !skip,
       default: preset.dbHost || DEFAULT_DB_HOST,
       validate: input => validateInput(input, 'Database host'),
-      filter: trim
+      filter: trim,
     },
     {
       type: 'input',
@@ -119,7 +107,7 @@ module.exports.inqConfig = (projectName, flags) => {
       when: !skip,
       default: preset.dbPrefix || DEFAULT_DB_PREFIX,
       validate: input => validateInput(input, 'Database prefix'),
-      filter: trim
+      filter: trim,
     },
     {
       type: 'input',
@@ -127,7 +115,7 @@ module.exports.inqConfig = (projectName, flags) => {
       message: 'Project URL',
       default: `${DEFAULT_SITE_PROTOCOL}://${projectName}.${DEFAULT_SITE_EXTENSION}`,
       validate: input => validateInput(input, 'Project URL'),
-      filter: trim
+      filter: trim,
     },
     {
       type: 'input',
@@ -136,38 +124,14 @@ module.exports.inqConfig = (projectName, flags) => {
       when: !skip,
       default: preset.email || null,
       validate: input => validateInput(input, 'Email'),
-      filter: trim
+      filter: trim,
     },
     {
       type: 'autocomplete',
       name: 'locale',
       message: 'Core language',
       pageSize: PAGE_SIZE,
-      source: (answers, input) => search(answers, input, filteredLocales)
+      source: (answers, input) => search(answers, input, filteredLocales),
     },
-    {
-      type: 'checkbox-plus',
-      name: 'plugins',
-      message: 'Plugins',
-      pageSize: PAGE_SIZE,
-      searchable: true,
-      highlight: true,
-      when: !skip,
-      default: () => getNameBySlug(preset.plugins || [], plugins, slugPlugins) || [],
-      source: (answers, input) => search(answers, input, namePlugins),
-      filter: input => getSlugByName(input, plugins, namePlugins)
-    },
-    {
-      type: 'checkbox-plus',
-      name: 'themes',
-      message: 'Themes',
-      pageSize: PAGE_SIZE,
-      searchable: true,
-      highlight: true,
-      when: !skip,
-      default: () => getNameBySlug(preset.themes || [], themes, slugThemes) || [],
-      source: (answers, input) => search(answers, input, nameThemes),
-      filter: input => getSlugByName(input, themes, nameThemes)
-    }
-  ]);
-};
+  ])
+}

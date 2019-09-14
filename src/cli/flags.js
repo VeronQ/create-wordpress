@@ -1,4 +1,4 @@
-const { flags } = require('@oclif/command');
+const { flags } = require('@oclif/command')
 
 module.exports = {
   version: flags.version({
@@ -19,8 +19,8 @@ module.exports = {
     char: 'n',
     description: 'disable search engine indexing'
   }),
-  usePreset: flags.boolean({
-    char: 'u',
+  preset: flags.boolean({
+    char: 'p',
     description: 'use the last saved preset as default configuration'
   })
-};
+}

@@ -1,23 +1,22 @@
 // Packages
-const { Command } = require('@oclif/command');
+const { Command } = require('@oclif/command')
 
 // Source
-const { cliArgs, cliFlags } = require('./cli');
-const { description } = require('../package.json');
-const init = require('./init');
+const { cliArgs, cliFlags } = require('./cli')
+const { description } = require('../package.json')
 
 class CreateWordpressCommand extends Command {
-  async run() {
+  async run () {
     const {
       args: { projectName },
-      flags
-    } = this.parse(CreateWordpressCommand);
-    init(projectName, flags);
+      flags,
+    } = this.parse(CreateWordpressCommand)
+    require('./init')(projectName, flags)
   }
 }
 
-CreateWordpressCommand.description = description;
-CreateWordpressCommand.flags = cliFlags;
-CreateWordpressCommand.args = cliArgs;
+CreateWordpressCommand.description = description
+CreateWordpressCommand.flags = cliFlags
+CreateWordpressCommand.args = cliArgs
 
-module.exports = CreateWordpressCommand;
+module.exports = CreateWordpressCommand
