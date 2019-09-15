@@ -1,11 +1,49 @@
 # create-wordpress
+
+> WordPress automated installation
+
+[![npm version](https://badge.fury.io/js/npm-views.svg)](https://npmjs.org/package/create-wordpress "View this project on npm")
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-
-
-WordPress automated installation
-
-```sh
-$ create-wordpress <projectName>
-```
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/VeronQ/create-wordpress/blob/master/LICENSE)
 
 ![Demo CLI](../assets/demo.gif?raw=true)
+
+## Prerequisite
+
+* `Node.js` >= 8.0.0
+
+## Installation
+
+```sh
+$ npm install -g create-wordpress
+```
+
+## Usage
+
+```
+$ create-wordpress --help
+
+  Usage: create-wordpress <projectName> [options]
+  
+  WordPress automated installation
+  
+  Options:
+    -f, --force    overwrite target directory if it exists
+    -h, --help     show CLI help
+    -n, --noIndex  disable search engine indexing
+    -p, --preset   use the last saved preset as default configuration
+    -s, --skip     skip database initialization
+    -v, --version  show CLI version
+```
+
+## Example
+
+**Initliaze project and disable search engind indexing**
+
+```sh
+$ create-wordpress my-app --noIndex
+```
+
+## License
+
+[MIT](https://github.com/VeronQ/create-wordpress/blob/master/LICENSE)
