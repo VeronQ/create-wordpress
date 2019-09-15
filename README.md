@@ -2,7 +2,7 @@
 
 > WordPress automated installation
 
-[![npm version](https://badge.fury.io/js/npm-views.svg)](https://npmjs.org/package/create-wordpress "View this project on npm")
+[![npm version](https://badge.fury.io/js/create-wordpress.svg)](https://npmjs.org/package/create-wordpress "View this project on npm")
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/VeronQ/create-wordpress/blob/master/LICENSE)
 
