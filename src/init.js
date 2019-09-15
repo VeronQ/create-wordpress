@@ -1,56 +1,63 @@
-const fs = require('fs-extra')
+// Native
 const path = require('path')
-const inquirer = require('inquirer')
-const validateProjectName = require('validate-npm-package-name')
-const {red, cyan, yellow} = require('chalk')
 
-async function init(projectName, flags) {
+// Packages
+const fse = require('fs-extra')
+const validateProjectName = require('validate-npm-package-name')
+const { red, cyan, yellow } = require('chalk')
+
+// Source
+const { inqCreate } = require('./utils/ask')
+
+// Helpers
+const { clearConsole } = require('./utils/helpers')
+
+async function init (projectName, flags) {
   const cwd = process.cwd()
   const inCurrent = (projectName === '.')
   const name = inCurrent ? path.relative('../', cwd) : projectName
   const targetDir = path.resolve(cwd, projectName || '.')
   const result = validateProjectName(name)
 
+  clearConsole()
+
   if (!result.validForNewPackages) {
-    const errors = result.errors || []
-    const warnings = result.warnings || []
-    const log = [...errors, ...warnings]
-    console.error(red(`Invalid project name: "${name}"`))
-    if (errors.length) {
-      console.error(red.dim(`Error: ${log[0]}.`))
-    }
+    const log = [
+      ...result.errors || [],
+      ...result.warnings || [],
+    ]
+    console.error(red.bold(`Invalid project name: "${name}"`))
+    console.error(red(`Error: ${log[0]}.\n`))
     process.exit(1)
   }
 
-  if (fs.existsSync(targetDir)) {
-    if ('force' in flags && !inCurrent) {
-      await fs.remove(targetDir)
+  if (fse.existsSync(targetDir)) {
+    if (flags.hasOwnProperty('force') && !inCurrent) {
+      await fse.remove(targetDir)
     } else if (inCurrent) {
-      const {ok} = await inquirer.prompt([
-        {
-          name: 'ok',
-          type: 'confirm',
-          message: 'Generate project in current directory?',
-        },
-      ])
-      if (!ok) return
+      const { ok } = await inqCreate()
+      if (!ok) {
+        return
+      }
+      clearConsole()
     } else {
-      console.error(red(`\nTarget directory ${cyan(targetDir)} already exists.`))
+      console.error(
+        red(`Target directory ${cyan(targetDir)} already exists.`))
       process.exit(1)
     }
   }
 
-  if (!fs.existsSync(targetDir)) {
-    fs.mkdirSync(name)
+  if (!fse.existsSync(targetDir)) {
+    fse.mkdirSync(name)
     process.chdir(name)
   }
 
-  console.log(`\nCreating project in ${yellow(targetDir)}\n`)
+  console.log(`Creating project in ${yellow(targetDir)}\n`)
   require('./create')(name, flags)
 }
 
 module.exports = (...args) => {
-  return init(...args).catch(error => {
+  return init(...args).catch((error) => {
     console.error(error)
     process.exit(1)
   })

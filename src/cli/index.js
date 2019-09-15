@@ -1,4 +1,4 @@
 module.exports = {
   cliArgs: require('./args'),
-  cliFlags: require('./flags'),
+  cliFlags: require('./flags')
 }
