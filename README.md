@@ -38,7 +38,7 @@ $ create-wordpress --help
 
 ## Example
 
-**Initliaze project and disable search engind indexing**
+**Initliaze project and disable search engine indexing**
 
 ```sh
 $ create-wordpress my-app --noIndex
