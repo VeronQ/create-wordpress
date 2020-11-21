@@ -9,7 +9,7 @@ const presetHandler = require('../store/preset')
 const { locales } = require('../api')
 
 // Helpers
-const { trim, validateInput } = require('./helpers')
+const { trim, validateInput, validateEmail } = require('./helpers')
 const {
   DEFAULT_DB_USER,
   DEFAULT_DB_HOST,
@@ -89,7 +89,6 @@ module.exports.inqConfig = (projectName, flags) => {
       mask: '*',
       when: !skip,
       default: preset.dbPass || null,
-      validate: input => validateInput(input, 'Database password'),
     },
     {
       type: 'input',
@@ -123,7 +122,7 @@ module.exports.inqConfig = (projectName, flags) => {
       message: 'Email',
       when: !skip,
       default: preset.email || null,
-      validate: input => validateInput(input, 'Email'),
+      validate: input => validateEmail(input) || `Email is invalid`,
       filter: trim,
     },
     {
