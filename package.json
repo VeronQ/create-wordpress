@@ -1,7 +1,7 @@
 {
   "name": "create-wordpress",
   "description": "WordPress automated installation",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Quentin Veron",
   "bin": {
     "create-wordpress": "./bin/run"
