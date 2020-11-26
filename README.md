@@ -11,6 +11,7 @@
 ## Requirements
 
 * `Node.js` >= 8.0.0
+* `WP CLI`
 
 ## Installation
 
@@ -32,7 +33,6 @@ $ create-wordpress --help
     -h, --help     show CLI help
     -n, --noIndex  disable search engine indexing
     -p, --preset   use the last saved preset as default configuration
-    -s, --skip     skip database initialization
     -v, --version  show CLI version
 ```
 
