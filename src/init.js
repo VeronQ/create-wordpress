@@ -4,22 +4,39 @@ const path = require('path')
 // Packages
 const fse = require('fs-extra')
 const validateProjectName = require('validate-npm-package-name')
-const { red, cyan, yellow } = require('chalk')
+const {red, cyan, yellow, bold} = require('chalk')
+const commandExists = require('command-exists-promise')
+const hyperlinker = require('hyperlinker')
 
 // Source
-const { inqCreate } = require('./utils/ask')
+const {inqCreate} = require('./utils/ask')
+const {version} = require('../package.json')
 
 // Helpers
-const { clearConsole } = require('./utils/helpers')
+const {clearConsole} = require('./utils/helpers')
 
-async function init (projectName, flags) {
+async function init(projectName, flags) {
+  clearConsole()
+  console.log(bold(`[create-wordpress v${version}]\n`))
+
+  try {
+    const exists = await commandExists('wp')
+    if (!exists) {
+      console.error(red('WP CLI is required'))
+      console.log(hyperlinker(cyan('https://wp-cli.org/'), 'https://wp-cli.org/'))
+      process.exit(1)
+    }
+  } catch (error) {
+    console.error(red(error))
+    process.exit(1)
+  }
+
   const cwd = process.cwd()
   const inCurrent = (projectName === '.')
   const name = inCurrent ? path.relative('../', cwd) : projectName
   const targetDir = path.resolve(cwd, projectName || '.')
   const result = validateProjectName(name)
 
-  clearConsole()
 
   if (!result.validForNewPackages) {
     const log = [
@@ -35,14 +52,13 @@ async function init (projectName, flags) {
     if (flags.hasOwnProperty('force') && !inCurrent) {
       await fse.remove(targetDir)
     } else if (inCurrent) {
-      const { ok } = await inqCreate()
+      const {ok} = await inqCreate()
       if (!ok) {
         return
       }
       clearConsole()
     } else {
-      console.error(
-        red(`Target directory ${cyan(targetDir)} already exists.`))
+      console.error(red(`Target directory ${cyan(targetDir)} already exists.`))
       process.exit(1)
     }
   }
@@ -53,7 +69,7 @@ async function init (projectName, flags) {
   }
 
   console.log(`Creating project in ${yellow(targetDir)}\n`)
-  require('./create')(name, flags)
+  await require('./create')(name, flags)
 }
 
 module.exports = (...args) => {

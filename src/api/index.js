@@ -1,3 +1,3 @@
 module.exports = {
-  locales: require('./locales')
+  locales: require('./locales'),
 }

@@ -1,15 +1,16 @@
 // Packages
 const fuzzy = require('fuzzy')
 const inquirer = require('inquirer')
-inquirer.registerPrompt('autocomplete',
-  require('inquirer-autocomplete-prompt'))
+const type = require('../utils/types')
+
+inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
 
 // Source
 const presetHandler = require('../store/preset')
-const { locales } = require('../api')
+const {locales} = require('../api')
 
 // Helpers
-const { trim, validateInput, validateEmail } = require('./helpers')
+const {trim, validateInput, validateEmail} = require('./helpers')
 const {
   DEFAULT_DB_USER,
   DEFAULT_DB_HOST,
@@ -44,6 +45,7 @@ module.exports.inqPreset = () => {
     {
       type: 'confirm',
       name: 'savePreset',
+      default: false,
       message: 'Save this configuration as default preset for the next uses?',
     },
   ])
@@ -51,8 +53,7 @@ module.exports.inqPreset = () => {
 
 // Config-related questions
 module.exports.inqConfig = (projectName, flags) => {
-  const preset = flags.preset ? presetHandler.get() : {}
-  const { skip } = flags
+  const preset = flags.hasOwnProperty(type.FLAGS.PRESET) ? presetHandler.get() : {}
   let filteredLocales = [...locales]
 
   if (preset && preset.locale && locales.includes(preset.locale)) {
@@ -68,7 +69,6 @@ module.exports.inqConfig = (projectName, flags) => {
       type: 'input',
       name: 'dbName',
       message: 'Database name',
-      when: !skip,
       default: projectName,
       validate: input => validateInput(input, 'Database name'),
       filter: trim,
@@ -77,7 +77,6 @@ module.exports.inqConfig = (projectName, flags) => {
       type: 'input',
       name: 'dbUser',
       message: 'Database username',
-      when: !skip,
       default: preset.dbUser || DEFAULT_DB_USER,
       validate: input => validateInput(input, 'Database username'),
       filter: trim,
@@ -87,14 +86,12 @@ module.exports.inqConfig = (projectName, flags) => {
       name: 'dbPass',
       message: 'Database password',
       mask: '*',
-      when: !skip,
       default: preset.dbPass || null,
     },
     {
       type: 'input',
       name: 'dbHost',
       message: 'Database host',
-      when: !skip,
       default: preset.dbHost || DEFAULT_DB_HOST,
       validate: input => validateInput(input, 'Database host'),
       filter: trim,
@@ -103,7 +100,6 @@ module.exports.inqConfig = (projectName, flags) => {
       type: 'input',
       name: 'dbPrefix',
       message: 'Database prefix',
-      when: !skip,
       default: preset.dbPrefix || DEFAULT_DB_PREFIX,
       validate: input => validateInput(input, 'Database prefix'),
       filter: trim,
@@ -120,7 +116,6 @@ module.exports.inqConfig = (projectName, flags) => {
       type: 'input',
       name: 'email',
       message: 'Email',
-      when: !skip,
       default: preset.email || null,
       validate: input => validateEmail(input) || `Email is invalid`,
       filter: trim,

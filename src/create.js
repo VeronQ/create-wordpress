@@ -3,18 +3,17 @@ const Listr = require('listr')
 const execa = require('execa')
 const notifier = require('node-notifier')
 const hyperlinker = require('hyperlinker')
-const { red, cyan, yellow, bold } = require('chalk')
+const {red, cyan, yellow, bold} = require('chalk')
 
 // Source
 const presetHandler = require('./store/preset')
-const { inqConfig, inqPreset } = require('./utils/ask')
+const {inqConfig, inqPreset} = require('./utils/ask')
 
 // Helpers
-const { capitalize, spacer } = require('./utils/helpers')
+const {capitalize, spacer} = require('./utils/helpers')
 const type = require('./utils/types')
 
-async function create (projectName, flags) {
-  // Set a default value to undefined keys (if --skip flag)
+async function create(projectName, flags) {
   const settings = await inqConfig(projectName, flags)
   const {
     dbName = projectName,
@@ -24,7 +23,7 @@ async function create (projectName, flags) {
     dbPrefix = type.DEFAULT_DB_PREFIX,
     locale,
     email,
-    siteUrl
+    siteUrl,
   } = settings
 
   const tasks = new Listr([
@@ -32,28 +31,35 @@ async function create (projectName, flags) {
       title: 'Download WordPress core',
       task: async () => {
         try {
-          await execa.shell(`wp core download --locale=${locale}`)
+          await execa('wp', ['core', 'download', `--locale=${locale}`])
         } catch (error) {
           throw new Error(error)
         }
-      }
+      },
     },
     {
       title: 'Generate wp-config.php',
       task: async () => {
-        const check = (flags.hasOwnProperty('skip') ? '--skip-check' : '')
         try {
-          await execa.shell(
-            `wp config create --dbname=${dbName} --dbuser=${dbUser} --dbpass=${dbPass} --dbhost=${dbHost} --dbprefix=${dbPrefix} ${check}`)
+          await execa('wp',
+            [
+              'config',
+              'create',
+              `--dbname=${dbName}`,
+              `--dbuser=${dbUser}`,
+              `--dbpass=${dbPass}`,
+              `--dbhost=${dbHost}`,
+              `--dbprefix=${dbPrefix}`,
+            ],
+          )
         } catch (error) {
           throw new Error(error)
         }
-        execa.shell('wp config set WP_DEBUG true --raw')
-      }
+        execa('wp', ['config', 'set', 'WP_DEBUG', true, '--raw'])
+      },
     },
     {
       title: 'Create database',
-      enabled: () => !flags.skip,
       task: async () => {
         const siteTitle = capitalize(projectName)
         return new Listr([
@@ -61,71 +67,82 @@ async function create (projectName, flags) {
             title: 'Initialize database',
             task: async () => {
               try {
-                await execa.shell('wp db create')
+                await execa('wp', ['db', 'create'])
               } catch (error) {
                 throw new Error(error)
               }
-            }
+            },
           },
           {
             title: 'Generate tables',
             task: async () => {
               try {
-                await execa.shell(
-                  `wp core install --admin_user=${type.ADMIN_USER} --admin_password=${type.ADMIN_PASSWORD} --admin_email=${email} --url=${siteUrl} --title=${siteTitle} --skip-email`)
+                await execa('wp',
+                  [
+                    'core',
+                    'install',
+                    `--admin_user=${type.ADMIN_USER}`,
+                    `--admin_password=${type.ADMIN_PASSWORD}`,
+                    `--admin_email=${email}`,
+                    `--url=${siteUrl}`,
+                    `--title=${siteTitle}`,
+                    `--skip-email`,
+                  ],
+                )
               } catch (error) {
                 throw new Error(error)
               }
-            }
+            },
           },
           {
             title: 'Disable search engine indexing',
-            enabled: () => flags.noIndex,
+            enabled: () => flags.hasOwnProperty(type.FLAGS.NOINDEX),
             task: async () => {
               try {
-                await execa.shell('wp option set blog_public 0')
+                await execa('wp',
+                  [
+                    'option',
+                    'set',
+                    'blog_public',
+                    0,
+                  ])
               } catch (error) {
                 throw new Error(error)
               }
-            }
-          }
+            },
+          },
         ])
-      }
-    }
+      },
+    },
   ])
 
   spacer()
 
   try {
     await tasks.run().then(() => {
-      console.log(
-        `\n🎉 Successfully created project ${yellow(projectName)}.\n`)
+      console.log(`\n🎉 Successfully created project ${yellow(projectName)}.\n`)
       notifier.notify({
         title: 'create-wordpress',
-        message: `🎉 Successfully created project ${projectName}.`
+        message: `🎉 Successfully created project ${projectName}.`,
       })
-      if (!flags.skip) {
-        const adminUrl = [siteUrl, type.ADMIN_PATH].join('/')
-        console.log(hyperlinker(cyan(adminUrl), adminUrl))
-        console.log(`\nUsername: ${bold(type.ADMIN_USER)}`)
-        console.log(`Password: ${bold(type.ADMIN_PASSWORD)}\n`)
-      }
+      const adminUrl = [siteUrl, type.ADMIN_PATH].join('/')
+      console.log(hyperlinker(cyan(adminUrl), adminUrl))
+      console.log(`\nUsername: ${bold(type.ADMIN_USER)}`)
+      console.log(`Password: ${bold(type.ADMIN_PASSWORD)}\n`)
 
-      (async () => {
-        const { savePreset } = await inqPreset()
+      ;(async () => {
+        const {savePreset} = await inqPreset()
         if (savePreset) {
           presetHandler.set(settings)
-          console.log(
-            cyan(
-              '\nPreset saved, use "--preset (alias: -p)" next time.'))
+          console.log(cyan('\nPreset saved, use "--preset (alias: -p)" next time.'))
         }
         spacer()
         process.exit()
       })()
     })
-  } catch (error) {
+  } catch ({message}) {
     console.log(red('\nSomething went wrong'))
-    console.error(error)
+    console.error(message)
     process.exit(1)
   }
 }

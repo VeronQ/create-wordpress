@@ -1,4 +1,12 @@
-const { homedir } = require('os')
+const {homedir} = require('os')
+
+const FLAGS = {
+  VERSION: 'version',
+  HELP: 'help',
+  FORCE: 'force',
+  NOINDEX: 'noIndex',
+  PRESET: 'preset',
+}
 
 const DEFAULT_DB_USER = 'root'
 const DEFAULT_DB_PASS = 'root'
@@ -19,6 +27,7 @@ const PRESET_FILE_NAME = 'preset.json'
 const PAGE_SIZE = 4
 
 module.exports = {
+  FLAGS,
   DEFAULT_DB_USER,
   DEFAULT_DB_PASS,
   DEFAULT_DB_HOST,
