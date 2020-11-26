@@ -8,7 +8,7 @@
 
 ![Demo CLI](../assets/demo.gif?raw=true)
 
-## Prerequisite
+## Requirements
 
 * `Node.js` >= 8.0.0
 
@@ -46,4 +46,4 @@ $ create-wordpress my-app --noIndex
 
 ## License
 
-[MIT](https://github.com/VeronQ/create-wordpress/blob/master/LICENSE)
+The Wordpress create-wordpress CLI is open-sourced software licensed under the [MIT](https://github.com/VeronQ/create-wordpress/blob/master/LICENSE).
